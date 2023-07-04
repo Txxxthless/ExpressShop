@@ -1,25 +1,31 @@
 const Product = require("../models/product");
 const Brand = require("../models/brand");
+const ApiError = require("../error/apiError");
 
 class ProductsController {
-  async getAllProducts(req, res) {
+  async getAllProducts(req, res, next) {
     const products = await Product.find().populate("brand").exec();
     return res.json(products);
   }
 
-  async getProduct(req, res) {
+  async getProduct(req, res, next) {
     const { name } = req.params;
     const product = await Product.findOne({ name }).populate("brand").exec();
     return res.json(product);
   }
 
-  async addProduct(req, res) {
+  async addProduct(req, res, next) {
     const { name, price, brandName } = req.body;
 
     const brand = await Brand.findOne({ name: brandName });
 
     if (!brand) {
-      res.end();
+      return next(
+        new ApiError(
+          404,
+          `Brand <${brandName}> not found. Try adding it first.`
+        )
+      );
     }
 
     const product = new Product({
@@ -30,10 +36,9 @@ class ProductsController {
 
     try {
       await product.save();
-    } catch (error) {
-      console.log(error);
-    } finally {
       res.end();
+    } catch (error) {
+      return next(new ApiError(500, "Failed to add new product."));
     }
   }
 }
