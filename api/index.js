@@ -1,11 +1,25 @@
+require("dotenv").config();
 const express = require("express");
 const router = require("./routes/index");
+const mongoose = require("mongoose");
 
 const app = express();
 
+app.use(express.json());
 app.use("/api", router);
 
 const PORT = process.env.PORT || 4000;
-app.listen(PORT, () => {
-  console.log(`Listening on port ${PORT}`);
-});
+
+async function start() {
+  try {
+    const url = process.env.DB_CONNECTION;
+    await mongoose.connect(url, { useNewUrlParser: true });
+    app.listen(PORT, () => {
+      console.log(`Listening on port ${PORT}`);
+    });
+  } catch (error) {
+    console.log(error);
+  }
+}
+
+start();
