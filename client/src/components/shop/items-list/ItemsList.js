@@ -1,24 +1,22 @@
-import React, { useState } from "react";
 import { Item } from "../item/Item";
+import { useState, useEffect } from "react";
+import { getAllProducts } from "../../../http/productsAPI";
 
 function ItemsList() {
-  const [items, setItems] = useState([
-    { name: "boots", brand: "Abibas", price: 150 },
-    { name: "gloves", brand: "Abibas", price: 30 },
-    { name: "t-shirt", brand: "Abibas", price: 50 },
-    { name: "boots", brand: "Abibas", price: 150 },
-    { name: "gloves", brand: "Abibas", price: 30 },
-    { name: "t-shirt", brand: "Abibas", price: 50 },
-    { name: "boots", brand: "Abibas", price: 150 },
-    { name: "gloves", brand: "Abibas", price: 30 },
-  ]);
+  const [products, setProducts] = useState([]);
+
+  useEffect(() => {
+    getAllProducts().then((products) => {
+      setProducts(products);
+    });
+  }, []);
 
   return (
     <>
       <div className="row">
-        {items.map((item) => (
-          <Item item={item} />
-        ))}
+      {
+        products.map((product) => <Item item={product} key={product._id}></Item>)
+      }
       </div>
     </>
   );

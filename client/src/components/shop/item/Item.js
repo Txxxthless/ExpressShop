@@ -10,7 +10,7 @@ function Item({ item }) {
       />
       <div className="card-body">
         <h5 className="card-title">{item.name}</h5>
-        <p className="card-text">{item.brand}</p>
+        <p className="card-text">{item.brand.name}</p>
         <a className="btn btn-primary">See more</a>
       </div>
     </div>
