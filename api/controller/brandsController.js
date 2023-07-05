@@ -9,8 +9,12 @@ class BrandsController {
 
   async getBrand(req, res, next) {
     const { name } = req.params;
-    const brand = await Brand.findOne({ name });
-    return res.json(brand);
+    const brand = await Brand.find();
+    return res.json(
+      brand.find((brand) =>
+        brand.name.toLowerCase().includes(name.toLowerCase())
+      )
+    );
   }
 
   async addBrand(req, res, next) {

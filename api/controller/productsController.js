@@ -10,8 +10,12 @@ class ProductsController {
 
   async getProduct(req, res, next) {
     const { name } = req.params;
-    const product = await Product.findOne({ name }).populate("brand").exec();
-    return res.json(product);
+    const products = await Product.find().populate("brand").exec();
+    return res.json(
+      products.find((product) =>
+        product.name.toLowerCase().includes(name.toLowerCase())
+      )
+    );
   }
 
   async addProduct(req, res, next) {
